@@ -1,6 +1,6 @@
 import { Router } from "express";
 import CryptoJS from "crypto-js";
-import { META } from "@consumet/extensions";
+import { META } from "@saurabhgangule/consumet-lib";
 import axios from "axios";
 
 import v2 from "../module/v2.js";
