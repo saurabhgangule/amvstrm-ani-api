@@ -31,11 +31,22 @@ const limiter = rateLimit({
   },
 });
 
-let cache = apicache.options({
-    defaultDuration: "1 hour",
-  }).middleware;
+let ifHit = false;
 
-router.use("/", cache("30 minutes"))
+const cache = apicache.options({
+  afterHit: () => {
+    console.log(ifHit);
+    ifHit = true;
+    return true;
+  },
+  defaultDuration: "1 hour",
+}).middleware;
+
+router.use("/", cache("30 minutes"), (req, res, next) => {
+  res.setHeader("x-amv-cache", ifHit ? "HIT" : "MISS");
+  
+  next();
+});
 router.use("/", limiter);
 router.use("/v1", v1);
 router.use("/v2", v2);
